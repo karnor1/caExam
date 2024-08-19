@@ -1,5 +1,9 @@
 
 using Microsoft.EntityFrameworkCore;
+using CaExam.Interfaces;
+using CaExam.Interfaces.RepositoryInterfaces;
+using CaExam.Repositories.SpecificRepositories;
+using static CaExam.Repositories.GenericDbRepo;
 
 namespace CaExam
 {
@@ -15,8 +19,14 @@ namespace CaExam
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
             builder.Services.AddDbContext<Context>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+            builder.Services.AddScoped<IUserDetailsRepository, UserDetailsRepository>();
 
 
             var app = builder.Build();

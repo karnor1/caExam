@@ -7,7 +7,6 @@
         public string street { get; set; }
         public string HouseNumber {  get; set; }
         public string? ApartamentNumber { get; set; }
-
         public Guid UserId { get; set; }
         public UserModel User { get; set; }
     }
