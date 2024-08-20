@@ -9,7 +9,7 @@ namespace CaExam.Models
         public byte[] Password { get; set; }
         public byte[] Salt { get; set; }
         public  eUserRole Role { get; set; }
-        public Address Address { get; set; }
-        public UserDetails UserDetails { get; set; }
+        public Address? Address { get; set; }
+        public UserDetails? UserDetails { get; set; }
     }
 }

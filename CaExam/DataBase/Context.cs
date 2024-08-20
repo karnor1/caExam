@@ -1,12 +1,16 @@
-﻿using CaExam.Models;
+﻿using CaExam.Helpers;
+using CaExam.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 public class Context: DbContext
 {
-
-    public Context(DbContextOptions<Context> options)
+    private readonly IInitialDataGenerator _initialDataGenerator;
+    public Context(DbContextOptions<Context> options, IInitialDataGenerator initialDataGenerator)
     : base(options)
     {
+        _initialDataGenerator = initialDataGenerator;
     }
 
     public DbSet<UserModel> Users { get; set; }
@@ -15,6 +19,25 @@ public class Context: DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        Guid id= Guid.NewGuid();
+        UserModel user = _initialDataGenerator.GenerateUserModel("admin", "admin", CaExam.Shared.eUserRole.Admin, id);
+
+
+        modelBuilder.Entity<Address>().HasData(
+            _initialDataGenerator.GenerateAddress(id)
+        );
+
+        modelBuilder.Entity<UserDetails>().HasData(
+            _initialDataGenerator.GenerateUserDetails(id)
+            );
+
+        modelBuilder.Entity<UserModel>().HasData(
+            user
+        );
+
+
+
+
         modelBuilder.Entity<UserModel>()
             .HasOne(u => u.Address)
             .WithOne(a => a.User)
