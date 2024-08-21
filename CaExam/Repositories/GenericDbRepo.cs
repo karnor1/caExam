@@ -20,17 +20,17 @@ namespace CaExam.Repositories
 
             public async Task<IEnumerable<T>> GetAllAsync()
             {
-                return await _dbSet.ToListAsync();
+                return  _dbSet.ToList();
             }
 
             public async Task<T> GetByIdAsync(Guid id)
             {
-                return await _dbSet.FindAsync(id);
+                return  _dbSet.Find(id);
             }
 
             public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
             {
-                return await _dbSet.Where(predicate).ToListAsync();
+                return  _dbSet.Where(predicate).ToList();
             }
 
             public async Task AddAsync(T entity)
@@ -60,7 +60,7 @@ namespace CaExam.Repositories
 
             public async Task DeleteAsync(Guid id)
             {
-                var entity = await _dbSet.FindAsync(id);
+                var entity =  _dbSet.Find(id);
                 if (entity != null)
                     _dbSet.Remove(entity);
             }
@@ -75,7 +75,7 @@ namespace CaExam.Repositories
 
             public async Task<int> SaveChangesAsync()
             {
-                return await _context.SaveChangesAsync();
+                return  _context.SaveChanges();
             }
         }
     }

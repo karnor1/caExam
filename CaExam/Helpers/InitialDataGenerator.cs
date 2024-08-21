@@ -3,6 +3,8 @@ using CaExam.Models;
 using CaExam.Shared;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Text;
+using Bogus;
+using Bogus.Extensions.Sweden;
 
 namespace CaExam.Helpers
 {
@@ -10,6 +12,8 @@ namespace CaExam.Helpers
     {
 
         private  readonly IPasswordService _passwordService;
+        Faker _faker= new Faker();
+
 
         public InitialDataGenerator(IPasswordService passwordService)
         {
@@ -29,11 +33,11 @@ namespace CaExam.Helpers
             return new UserDetails
             {
                 Id =  Guid.NewGuid(),
-                Email = "tele2@hotmail.com",
-                Name = "zmogus",
-                PersonalIdNumber = "37707727776",
-                PhoneNumber = "8644785417",
-                Surname = "zmogaitis",
+                Email = _faker.Person.Email,
+                Name = _faker.Person.FirstName,
+                PersonalIdNumber = _faker.Person.Personnummer(),
+                PhoneNumber = _faker.Phone.PhoneNumber(),
+                Surname = _faker.Person.LastName,
                 UserId = userId,
                 PicturePath = "somewhere in server"
             };
@@ -44,10 +48,10 @@ namespace CaExam.Helpers
             return new Address
             {
                 Id =  Guid.NewGuid(),
-                City = "Vilnius",
-                street = "Kauno",
-                ApartamentNumber = "1",
-                HouseNumber = "2",
+                City = _faker.Address.City(),
+                street = _faker.Address.StreetName(),
+                ApartamentNumber = _faker.Address.BuildingNumber(),
+                HouseNumber = _faker.Address.BuildingNumber(),
                 UserId = userId
             };
         }

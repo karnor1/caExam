@@ -1,3 +1,4 @@
+using CaExam.Helpers;
 using CaExam.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,17 +23,35 @@ namespace CaExam.Controllers
         [HttpPost("Register")]
         public ActionResult Register(string username, string password)
         {
-            _userAccountService.RegisterAsync(username, password);
 
-            return Ok();
+            var resp = _userAccountService.RegisterAsync(username, password);
+
+            if (!resp.IsCompletedSuccessfully) return StatusCode(500, "Error with data provided or our system");
+
+
+            if (resp.Result.Success != true)
+            {
+                return BadRequest(resp.Result.Message);
+
+            }
+            else return Ok(resp.Result.Message);
         }
+
 
         [HttpGet("Login")]
         public ActionResult Login(string username, string password)
         {
+            var resp = _userAccountService.Login(username, password);
+
+            if (!resp.IsCompletedSuccessfully) return StatusCode(500, "Error with data provided or our system");
 
 
-            return Unauthorized();
+            if (resp.Result.Success != true)
+            {
+                return Unauthorized(resp.Result.Message);
+
+            }
+            else return Ok(resp.Result.Message);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CaExam.Interfaces.RepositoryInterfaces;
 using CaExam.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using static CaExam.Repositories.GenericDbRepo;
 
 namespace CaExam.Repositories.SpecificRepositories
@@ -13,7 +14,9 @@ namespace CaExam.Repositories.SpecificRepositories
         // TODO make with predicate of generic repo find.
         public async Task<UserModel> GetUserByUsernameAsync(string username)
         {
-            return await _dbSet.SingleOrDefaultAsync(u => u.Username == username);
+            return       _dbSet
+                    .Where(user => user.Username == username)
+                    .FirstOrDefault();
         }
 
 

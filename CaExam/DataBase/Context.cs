@@ -19,20 +19,33 @@ public class Context: DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        Guid id= Guid.NewGuid();
-        UserModel user = _initialDataGenerator.GenerateUserModel("admin", "admin", CaExam.Shared.eUserRole.Admin, id);
+        Guid id1= Guid.NewGuid();
+        UserModel userAdmin = _initialDataGenerator.GenerateUserModel("admin", "admin", CaExam.Shared.eUserRole.Admin, id1);
+        Guid id2 = Guid.NewGuid();
+        UserModel userUser = _initialDataGenerator.GenerateUserModel("userUser", "userUser", CaExam.Shared.eUserRole.User, id2);
 
+        Guid id3 = Guid.NewGuid();
+        UserModel userUser1 = _initialDataGenerator.GenerateUserModel("userUser1", "userUser1", CaExam.Shared.eUserRole.User, id3);
+
+        Guid id4 = Guid.NewGuid();
+        UserModel userGuest = _initialDataGenerator.GenerateUserModel("userGuest", "userGuest", CaExam.Shared.eUserRole.Guest, id4);
 
         modelBuilder.Entity<Address>().HasData(
-            _initialDataGenerator.GenerateAddress(id)
+            _initialDataGenerator.GenerateAddress(id1),
+            _initialDataGenerator.GenerateAddress(id2),
+            _initialDataGenerator.GenerateAddress(id3),
+            _initialDataGenerator.GenerateAddress(id4)
         );
 
         modelBuilder.Entity<UserDetails>().HasData(
-            _initialDataGenerator.GenerateUserDetails(id)
+            _initialDataGenerator.GenerateUserDetails(id1),
+            _initialDataGenerator.GenerateUserDetails(id2),
+            _initialDataGenerator.GenerateUserDetails(id3),
+            _initialDataGenerator.GenerateUserDetails(id4)
             );
 
         modelBuilder.Entity<UserModel>().HasData(
-            user
+            userAdmin, userGuest, userUser, userUser1
         );
 
 
