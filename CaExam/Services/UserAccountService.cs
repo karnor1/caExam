@@ -3,6 +3,7 @@ using CaExam.Interfaces.RepositoryInterfaces;
 using System.Text;
 using CaExam.Models;
 using CaExam.Helpers;
+using CaExam.Shared;
 
 
 namespace CaExam.Services
@@ -11,11 +12,13 @@ namespace CaExam.Services
     {
         private readonly IPasswordService _passwordService;
         private readonly IUserRepository _userRepository;
+        private readonly IJwtService _jwtService;
 
-        public UserAccountService(IPasswordService passwordService, IUserRepository userRepository)
+        public UserAccountService(IPasswordService passwordService, IUserRepository userRepository, IJwtService jwtService)
         {
             _passwordService = passwordService;
             _userRepository = userRepository;
+            _jwtService = jwtService;
         }
 
         public async Task<ApiResponse> RegisterAsync(string username, string password)
@@ -75,9 +78,10 @@ namespace CaExam.Services
 
                 byte[] hashedPassword = _passwordService.GenerateHash(Encoding.UTF8.GetBytes(password), salt);
 
-                if (hashedPassword.SequenceEqual( user.Result.Password) )
-
-                    return ApiResponse.SuccessResponse($"Hello {username}, loged in ");
+                if (hashedPassword.SequenceEqual(user.Result.Password))
+                {
+                    return ApiResponse<string>.SuccessResponse(_jwtService.GenerateToken(user.Result.Id, user.Result.Role),"Log in successful, use provided jwt for further authorization");
+                }
 
             }
 
