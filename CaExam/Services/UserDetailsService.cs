@@ -12,12 +12,15 @@ namespace CaExam.Services
         private readonly IUserDetailsRepository _repository;
         private readonly IWebHostEnvironment _enviroment;
         private readonly IImageService _imageService;
+        private readonly IAddressRepository _addressRepository;
 
-        public UserDetailsService(IUserDetailsRepository repository, IWebHostEnvironment enviroment, IImageService imageservice)
+
+        public UserDetailsService(IUserDetailsRepository repository, IWebHostEnvironment enviroment, IImageService imageservice, IAddressRepository addressRepository)
         {
             _repository = repository;
             _enviroment = enviroment;
             _imageService = imageservice;
+            _addressRepository = addressRepository;
         }
 
         public async Task<ApiResponse> AddUserDetails(UserDetailsDto details, Guid userid)
@@ -35,11 +38,32 @@ namespace CaExam.Services
 
             userDetails.PicturePath = await _imageService.SavePictureAsync(details.PicturePath);
             _repository.AddAsync(userDetails);
+
             await _repository.SaveChangesAsync();
 
             return ApiResponse.SuccessResponse();
 
         }
+
+       public async  Task<ApiResponse> AddAddress(AddressDto address, Guid userId)
+        {
+            var _address = new Address
+            {
+                City = address.City,
+                street = address.street,
+                ApartamentNumber = address?.ApartamentNumber ?? "N/A",
+                HouseNumber = address.HouseNumber,
+                Id = new Guid(),
+                UserId = userId
+            };
+
+            await _addressRepository.AddAsync(_address);
+           await _addressRepository.SaveChangesAsync();
+            return ApiResponse.SuccessResponse();
+
+
+        }
+
 
 
     }

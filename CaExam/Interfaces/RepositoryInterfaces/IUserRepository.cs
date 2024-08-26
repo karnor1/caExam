@@ -1,4 +1,5 @@
 ﻿using CaExam.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CaExam.Interfaces.RepositoryInterfaces
 {
@@ -6,5 +7,13 @@ namespace CaExam.Interfaces.RepositoryInterfaces
     public interface IUserRepository : IGenericRepository<UserModel>
     {
         Task<UserModel> GetUserByUsernameAsync(string username);
+        Task<UserModel> GetUserByIdAsync(Guid id);
+
+        Task<UserModel> GetFullUserByNameAsync(string name);
+
+        Task<UserModel> GetFullUserByIDAsync(Guid Id);
+
+
+
     }
 }

@@ -15,25 +15,32 @@ public class ImageService : IImageService
         _environment = environment;
     }
 
-    private void ScaleImage(Stream inputStream, Stream outputStream, int maxWidth, int maxHeight)
+
+    private Bitmap ScaleImage(Stream inputStream, int targetWidth = 200, int targetHeight = 200)
     {
         using (var image = Image.FromStream(inputStream))
         {
-            var ratioX = (double)maxWidth / image.Width;
-            var ratioY = (double)maxHeight / image.Height;
-            var ratio = Math.Min(ratioX, ratioY);
+            var newImage = new Bitmap(targetWidth, targetHeight, PixelFormat.Format32bppArgb);
 
-            var newWidth = (int)(image.Width * ratio);
-            var newHeight = (int)(image.Height * ratio);
-
-            using (var newImage = new Bitmap(newWidth, newHeight))
             using (var graphics = Graphics.FromImage(newImage))
             {
+                graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                 graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-                newImage.Save(outputStream, ImageFormat.Jpeg);
+                graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+                graphics.Clear(Color.Transparent);
+
+                graphics.DrawImage(image, 0, 0, targetWidth, targetHeight);
             }
+
+            return newImage;
         }
+    }
+
+    private void SaveImage(Bitmap image, string outputPath, ImageFormat format)
+    {
+        image.Save(outputPath, format);
     }
 
     public async Task<string> SavePictureAsync(IFormFile picture)
@@ -44,10 +51,12 @@ public class ImageService : IImageService
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
         using (var inputStream = picture.OpenReadStream())
-        using (var fileStream = new FileStream(filePath, FileMode.Create))
         {
-            // Scale image and save to file
-            ScaleImage(inputStream, fileStream, 200, 200);
+            inputStream.Position = 0;  // Ensure the stream is at the beginning
+
+            Bitmap processedImg = ScaleImage(inputStream);
+
+            SaveImage(processedImg, filePath, ImageFormat.Jpeg);  // Save using full file path
         }
 
         return $"/uploads/{uniqueFileName}";
