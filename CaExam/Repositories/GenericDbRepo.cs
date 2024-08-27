@@ -49,6 +49,18 @@ namespace CaExam.Repositories
                 await _dbSet.AddRangeAsync(entities);
             }
 
+            public async Task MarkPropertyAsModifiedAsync<T>(T entity, string propertyName) where T : class
+            {
+                if (entity == null)
+                    throw new ArgumentNullException(nameof(entity));
+
+                var propertyInfo = typeof(T).GetProperty(propertyName);
+                if (propertyInfo == null)
+                    throw new ArgumentException($"Property '{propertyName}' does not exist on type '{typeof(T).Name}'.");
+
+                _context.Entry(entity).Property(propertyName).IsModified = true;
+            }
+
             public async Task UpdateAsync(T entity)
             {
                 if (entity == null)

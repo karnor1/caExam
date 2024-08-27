@@ -82,15 +82,9 @@ namespace CaExam.Services
                 {
                     return ApiResponse<string>.SuccessResponse(_jwtService.GenerateToken(user.Result.Id, user.Result.Role),"Log in successful, use provided jwt for further authorization");
                 }
-
             }
 
             return ApiResponse.ErrorResponse($"Username and password combination does not exist in our system");
-
-
-
-
-
         }
     }
 }

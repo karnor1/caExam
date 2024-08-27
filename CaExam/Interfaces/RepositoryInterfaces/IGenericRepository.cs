@@ -14,6 +14,8 @@ namespace CaExam.Interfaces.RepositoryInterfaces
         Task DeleteAsync(Guid id);
         Task DeleteAsync(T entity);
         Task<int> SaveChangesAsync();
+        Task MarkPropertyAsModifiedAsync<T>(T entity, string propertyName) where T : class;
+
     }
 
 }

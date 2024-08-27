@@ -60,11 +60,63 @@ namespace CaExam.Services
             await _addressRepository.AddAsync(_address);
            await _addressRepository.SaveChangesAsync();
             return ApiResponse.SuccessResponse();
-
-
         }
 
+        public async Task<ApiResponse> UpdateCity(string city, Guid userId)
+        {
+          var address = await  _addressRepository.GetDetailsByUserID(userId);
+            address.City = city;
+            await _addressRepository.SaveChangesAsync();
+            return ApiResponse.SuccessResponse();
+        }
 
+        public async Task<ApiResponse> UpdateAddressPropertyAsync(Guid userId, string propertyName, object value )
+        {
+            var address = await _addressRepository.GetDetailsByUserID(userId);
+
+            if (address == null)
+            {
+                return ApiResponse.ErrorResponse("No Entity under this user ");
+            }
+
+            var propertyInfo = typeof(Address).GetProperty(propertyName);
+            if (propertyInfo == null || !propertyInfo.CanWrite)
+            {
+
+                return ApiResponse.ErrorResponse("This field is not updatable or does not exist");
+
+            }
+
+            propertyInfo.SetValue(address, Convert.ChangeType(value, propertyInfo.PropertyType));
+
+            await _addressRepository.SaveChangesAsync();
+
+            return ApiResponse.SuccessResponse();
+        }
+
+        public async Task<ApiResponse> UpdateDetailsPropertyAsync(Guid userId, string propertyName, object value)
+        {
+            var address = await _repository.GetDetailsByUserID(userId);
+
+            if (address == null)
+            {
+                return ApiResponse.ErrorResponse("No Entity under this user ");
+            }
+
+            var propertyInfo = typeof(UserDetails).GetProperty(propertyName);
+            if (propertyInfo == null || !propertyInfo.CanWrite)
+            {
+
+                return ApiResponse.ErrorResponse("This field is not updatable or does not exist");
+
+            }
+
+            propertyInfo.SetValue(address, Convert.ChangeType(value, propertyInfo.PropertyType));
+
+            await _repository.SaveChangesAsync();
+
+            return ApiResponse.SuccessResponse();
+        }
 
     }
 }

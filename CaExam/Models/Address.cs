@@ -1,13 +1,13 @@
-﻿namespace CaExam.Models
+﻿using CaExam.Models.Dto;
+
+namespace CaExam.Models
 {
-    public class Address
+    public class Address : AddressDto
     {
         public Guid Id { get; set; }
-        public string City {  get; set; }
-        public string street { get; set; }
-        public string HouseNumber {  get; set; }
-        public string? ApartamentNumber { get; set; }
         public Guid UserId { get; set; }
         public UserModel User { get; set; }
     }
+    
+
 }

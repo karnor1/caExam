@@ -82,5 +82,13 @@ namespace CaExam.Controllers
 
             return Ok();
         }
+
+
+        //[HttpPost("GetFullDataAboutMe")]
+        //public async Task<IActionResult> CreateAddress([FromForm] AddressDto addressDto)
+        //{
+
+
+        // }
     }
 }

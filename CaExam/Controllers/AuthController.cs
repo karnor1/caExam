@@ -1,4 +1,4 @@
-using CaExam.Helpers;
+﻿using CaExam.Helpers;
 using CaExam.Interfaces;
 using CaExam.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -7,16 +7,16 @@ namespace CaExam.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class WeatherForecastController : ControllerBase
+    public class AuthController : ControllerBase
     {
 
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<AuthController> _logger;
         private readonly IUserAccountService _userAccountService;
 
 
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IUserAccountService userAccountService) 
+        public AuthController(ILogger<AuthController> logger, IUserAccountService userAccountService)
         {
             _userAccountService = userAccountService;
             _logger = logger;
