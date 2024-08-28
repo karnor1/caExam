@@ -14,7 +14,11 @@ public class ImageService : IImageService
     {
         _environment = environment;
     }
-
+    public  byte[] ImageToByteArray(string imagePath)
+    {
+        byte[] imageBytes = File.ReadAllBytes(_environment.ContentRootPath+imagePath);
+        return imageBytes;
+    }
 
     private Bitmap ScaleImage(Stream inputStream, int targetWidth = 200, int targetHeight = 200)
     {
@@ -45,7 +49,7 @@ public class ImageService : IImageService
 
     public async Task<string> SavePictureAsync(IFormFile picture)
     {
-        var uploadsFolder = Path.Combine(_environment.ContentRootPath, "PictureUploads");
+        var uploadsFolder = Path.Combine(_environment.ContentRootPath, "uploads");
         Directory.CreateDirectory(uploadsFolder);
         var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(picture.FileName)}";
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);

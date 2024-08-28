@@ -104,11 +104,10 @@ namespace CaExam.Services
             }
 
             var propertyInfo = typeof(UserDetails).GetProperty(propertyName);
+
             if (propertyInfo == null || !propertyInfo.CanWrite)
             {
-
                 return ApiResponse.ErrorResponse("This field is not updatable or does not exist");
-
             }
 
             propertyInfo.SetValue(address, Convert.ChangeType(value, propertyInfo.PropertyType));

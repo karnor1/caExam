@@ -9,6 +9,8 @@ using CaExam.Interfaces.RepositoryInterfaces;
 using CaExam.Repositories.SpecificRepositories;
 using CaExam.Helpers.CaExam.Helpers;
 using Microsoft.Identity.Client;
+using CaExam.Shared;
+using Microsoft.EntityFrameworkCore;
 
 namespace CaExam.Controllers
 {
@@ -19,12 +21,14 @@ namespace CaExam.Controllers
         private readonly IUserDetailsService _userDetailsService;
         private readonly IWebHostEnvironment _env;
         private readonly IUserRepository _userRepository;
+        private readonly IImageService _imageService;
 
-        public UserDetailsController(IUserDetailsService userDetailsService, IWebHostEnvironment env, IUserRepository userRepository)
+        public UserDetailsController(IUserDetailsService userDetailsService, IWebHostEnvironment env, IUserRepository userRepository, IImageService imageService)
         {
             _userDetailsService = userDetailsService;
             _env = env;
             _userRepository = userRepository;
+            _imageService = imageService;
         }
 
         [HttpPost("Add Details")]
@@ -84,11 +88,32 @@ namespace CaExam.Controllers
         }
 
 
-        //[HttpPost("GetFullDataAboutMe")]
-        //public async Task<IActionResult> CreateAddress([FromForm] AddressDto addressDto)
-        //{
+        [HttpPost("GetFullDataAboutMe")]
+        public async Task<TakeAwayData> TakeData()
+        {
+            var actionResult = UserValidationHelper.GetUserGuid(User, out Guid userId);
+            if (actionResult != null)
+            {
+                return null;
+            }
+            var user = await _userRepository.GetFullUserByIDAsync(userId);
+            byte[] image = _imageService.ImageToByteArray(user.UserDetails.PicturePath);
+            Models.Dto.TakeAwayData data = new TakeAwayData(image, user.Address, user.UserDetails);
+            return data;
+        }
 
+        [HttpPost("DeleteUserById")]
+        public async Task<IActionResult> DeleteUserById(Guid userToDelete)
+        {
+            var actionResult = UserValidationHelper.GetUserRole(User,out eUserRole role);
+            if (actionResult != null)
+            {
+                return null;
+            }
+            await _userRepository.DeleteAsync(userToDelete);
+            await _userRepository.SaveChangesAsync(); 
 
-        // }
+            return Ok();
+        }
     }
 }
