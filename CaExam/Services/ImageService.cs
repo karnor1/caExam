@@ -56,11 +56,11 @@ public class ImageService : IImageService
 
         using (var inputStream = picture.OpenReadStream())
         {
-            inputStream.Position = 0;  // Ensure the stream is at the beginning
+            inputStream.Position = 0;  
 
             Bitmap processedImg = ScaleImage(inputStream);
 
-            SaveImage(processedImg, filePath, ImageFormat.Jpeg);  // Save using full file path
+            SaveImage(processedImg, filePath, ImageFormat.Jpeg); 
         }
 
         return $"/uploads/{uniqueFileName}";

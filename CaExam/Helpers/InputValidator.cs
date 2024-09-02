@@ -15,7 +15,9 @@ namespace CaExam.Helpers
         GeneralNumber,
         NotNullorEmpty,
         Username,
-        Password
+        Password,
+        Address
+
     }
 
     public class InputValidator
@@ -41,6 +43,7 @@ namespace CaExam.Helpers
             {
                 return "Provided data is null";
             }
+
 
             switch (validator)
             {
@@ -125,6 +128,29 @@ namespace CaExam.Helpers
                     }
                     return "Data provided is invalid.";
 
+                case eInputTypes.Address:
+                    if (data is string str)
+                    {
+                        if (str.Trim() != str)
+                        {
+                            return "String must not have spaces at the beginning or end.";
+                        }
+
+                        var spaceCount = str.Count(c => c == ' ');
+                        if (spaceCount > 1)
+                        {
+                            return "String can contain at most one space in the middle.";
+                        }
+
+                        var cleanedStr = str.Replace(" ", "");
+                        if (!cleanedStr.All(char.IsLetterOrDigit))
+                        {
+                            return "String can only contain letters, digits, and at most one space.";
+                        }
+
+                        break;
+                    }
+                    return "Data provided is invalid.";
                 case eInputTypes.GeneralNumber:
                     if (data is string Number)
                     {
@@ -150,6 +176,7 @@ namespace CaExam.Helpers
                         return ("Data must be not empty");
                     }
                     return "Data provided is invalid.";
+
 
                 default:
 

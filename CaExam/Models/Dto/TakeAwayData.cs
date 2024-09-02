@@ -15,18 +15,24 @@ namespace CaExam.Models.Dto
             PicturePath = new byte[imageInBytes.Length];
             Array.Copy(imageInBytes, PicturePath, imageInBytes.Length);
 
-            PicturePath = imageInBytes;
+            if (imageInBytes == null)
+            {
+                imageInBytes = new byte[0];
+            } else
+            {
+                PicturePath = imageInBytes;
+            }
 
-            street= address.street;
-            ApartamentNumber = address.ApartamentNumber;
-            HouseNumber = address.HouseNumber;
-           City = address.City;
+                street = address?.street;
+            ApartamentNumber = address?.ApartamentNumber;
+            HouseNumber = address?.HouseNumber;
+           City = address?.City;
 
-            Name = userdetails.Name;
-            Surname = userdetails.Surname;
-            Email = userdetails.Email;
-            PersonalIdNumber = userdetails.PersonalIdNumber;
-            PhoneNumber = userdetails.PhoneNumber;
+            Name = userdetails?.Name;
+            Surname = userdetails?.Surname;
+            Email = userdetails?.Email;
+            PersonalIdNumber = userdetails?.PersonalIdNumber;
+            PhoneNumber = userdetails?.PhoneNumber;
 
     }
 

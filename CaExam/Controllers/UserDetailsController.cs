@@ -11,6 +11,7 @@ using CaExam.Helpers.CaExam.Helpers;
 using Microsoft.Identity.Client;
 using CaExam.Shared;
 using Microsoft.EntityFrameworkCore;
+using CaExam.Helpers;
 
 namespace CaExam.Controllers
 {
@@ -36,6 +37,18 @@ namespace CaExam.Controllers
         {
             if (userDetailsDto == null)
                 return BadRequest("UserDetailsDto cannot be null");
+
+
+            var validation = InputValidator.IsInputValid(eInputTypes.PersonalId, userDetailsDto.PersonalIdNumber);
+             validation += InputValidator.IsInputValid(eInputTypes.Surname, userDetailsDto.Surname);
+            validation += InputValidator.IsInputValid(eInputTypes.Email, userDetailsDto.Email);
+            validation += InputValidator.IsInputValid(eInputTypes.PhoneNumber, userDetailsDto.PhoneNumber);
+            validation += InputValidator.IsInputValid(eInputTypes.Name, userDetailsDto.Name);
+
+            if (validation != "")
+            {
+                return BadRequest(validation);
+            }
 
 
             var actionResult = UserValidationHelper.GetUserGuid(User, out Guid userId);
@@ -66,21 +79,28 @@ namespace CaExam.Controllers
             if (addressDto == null)
                 return BadRequest("Address cannot be null");
 
-            var actionResult = UserValidationHelper.GetUserGuid(User, out Guid userId);
+            var validation = InputValidator.IsInputValid(eInputTypes.Address, addressDto.ApartamentNumber);
+            validation += InputValidator.IsInputValid(eInputTypes.Address, addressDto.HouseNumber);
+            validation += InputValidator.IsInputValid(eInputTypes.Address, addressDto.City);
+            validation += InputValidator.IsInputValid(eInputTypes.Address, addressDto.street);
 
+            if (validation != "")
+            {
+                return BadRequest(validation);
+            }
+
+
+            var actionResult = UserValidationHelper.GetUserGuid(User, out Guid userId);
             if (actionResult != null)
             {
                 return actionResult;
             }
-
             var user = await _userRepository.GetFullUserByIDAsync(userId);
             if (user.Address != null)
             {
                 return BadRequest("sorry this user already has information, if you want update it - please use single data update api ");
             }
-
             var result = await _userDetailsService.AddAddress(addressDto, userId);
-
             if (!result.Success)
                 return StatusCode(500, result.Message);
 
@@ -98,6 +118,7 @@ namespace CaExam.Controllers
             }
             var user = await _userRepository.GetFullUserByIDAsync(userId);
             byte[] image = _imageService.ImageToByteArray(user.UserDetails.PicturePath);
+
             Models.Dto.TakeAwayData data = new TakeAwayData(image, user.Address, user.UserDetails);
             return data;
         }
@@ -106,10 +127,11 @@ namespace CaExam.Controllers
         public async Task<IActionResult> DeleteUserById(Guid userToDelete)
         {
             var actionResult = UserValidationHelper.GetUserRole(User,out eUserRole role);
-            if (actionResult != null)
+            if (actionResult == null)
             {
                 return null;
             }
+
             await _userRepository.DeleteAsync(userToDelete);
             await _userRepository.SaveChangesAsync(); 
 

@@ -16,14 +16,14 @@ namespace CaExam.Controllers
 
 
 
-        public AuthController(ILogger<AuthController> logger, IUserAccountService userAccountService)
+        public AuthController(ILogger<AuthController>? logger, IUserAccountService userAccountService)
         {
             _userAccountService = userAccountService;
             _logger = logger;
         }
 
         [HttpPost("Register")]
-        public ActionResult Register(string username, string password)
+        public async Task<ActionResult> Register(string username, string password)
         {
             var resp = _userAccountService.RegisterAsync(username, password);
 
@@ -40,7 +40,7 @@ namespace CaExam.Controllers
 
 
         [HttpGet("Login")]
-        public ActionResult Login(string username, string password)
+        public async Task<ActionResult> Login(string username, string password)
         {
             var resp = _userAccountService.Login(username, password);
 

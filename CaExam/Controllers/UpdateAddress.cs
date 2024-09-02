@@ -29,7 +29,9 @@ namespace CaExam.Controllers
             [HttpPost("/City")]
             public async Task<IActionResult> UpdateAddressCity(string City)
             {
-            var validation = InputValidator.IsInputValid(eInputTypes.GeneralString, City);
+
+
+            var validation = InputValidator.IsInputValid(eInputTypes.Address, City);
             if (validation != null)
             {
                 return BadRequest(validation);
@@ -41,7 +43,7 @@ namespace CaExam.Controllers
                     return actionResult;
                 }
 
-            var result = await _userDetailsService.UpdateAddressPropertyAsync(userId, nameof(CaExam.Models.Address.City), City);
+            var result = await _userDetailsService.UpdateAddressPropertyAsync(userId, nameof(CaExam.Models.Address.City), City.Trim());
 
                 if (!result.Success)
                     return StatusCode(500, result.Message);
@@ -53,7 +55,7 @@ namespace CaExam.Controllers
         [HttpPost("/Street")]
         public async Task<IActionResult> UpdateAddressStreet(string Street)
         {
-            var validation = InputValidator.IsInputValid(eInputTypes.GeneralString, Street);
+            var validation = InputValidator.IsInputValid(eInputTypes.Address, Street);
             if (validation != null)
             {
                 return BadRequest(validation);
@@ -65,7 +67,7 @@ namespace CaExam.Controllers
                 return actionResult;
             }
 
-            var result = await _userDetailsService.UpdateAddressPropertyAsync(userId, nameof(CaExam.Models.Address.street), Street);
+            var result = await _userDetailsService.UpdateAddressPropertyAsync(userId, nameof(CaExam.Models.Address.street), Street.Trim());
 
             if (!result.Success)
                 return StatusCode(500, result.Message);
@@ -76,11 +78,12 @@ namespace CaExam.Controllers
         [HttpPost("/HouseNumber")]
         public async Task<IActionResult> UpdateAddressHouse(string HouseNumber)
         {
-            var validation = InputValidator.IsInputValid(eInputTypes.NotNullorEmpty, HouseNumber);
+            var validation = InputValidator.IsInputValid(eInputTypes.Address, HouseNumber);
             if (validation != null)
             {
                 return BadRequest(validation);
             }
+            
 
             var actionResult = UserValidationHelper.GetUserGuid(User, out Guid userId);
             if (actionResult != null)
@@ -88,7 +91,7 @@ namespace CaExam.Controllers
                 return actionResult;
             }
 
-            var result = await _userDetailsService.UpdateAddressPropertyAsync(userId, nameof(CaExam.Models.Address.HouseNumber), HouseNumber);
+            var result = await _userDetailsService.UpdateAddressPropertyAsync(userId, nameof(CaExam.Models.Address.HouseNumber), HouseNumber.Trim());
 
             if (!result.Success)
                 return StatusCode(500, result.Message);
@@ -99,7 +102,7 @@ namespace CaExam.Controllers
         [HttpPost("/ApartamentNumber")]
         public async Task<IActionResult> UpdateAddressApartamentNumber(string ApartamentNumber)
         {
-            var validation = InputValidator.IsInputValid(eInputTypes.NotNullorEmpty, ApartamentNumber);
+            var validation = InputValidator.IsInputValid(eInputTypes.Address, ApartamentNumber);
             if (validation != null)
             {
                 return BadRequest(validation);
@@ -111,7 +114,7 @@ namespace CaExam.Controllers
                 return actionResult;
             }
 
-            var result = await _userDetailsService.UpdateAddressPropertyAsync(userId, nameof(CaExam.Models.Address.ApartamentNumber), ApartamentNumber);
+            var result = await _userDetailsService.UpdateAddressPropertyAsync(userId, nameof(CaExam.Models.Address.ApartamentNumber), ApartamentNumber.Trim());
 
             if (!result.Success)
                 return StatusCode(500, result.Message);

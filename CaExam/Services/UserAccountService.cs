@@ -72,7 +72,7 @@ namespace CaExam.Services
 
             }
             var  user = _userRepository.GetUserByUsernameAsync(username);
-            if ( user != null)
+            if ( user.Result != null)
             {
                 byte[] salt = user.Result.Salt;
 

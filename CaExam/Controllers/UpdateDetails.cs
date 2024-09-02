@@ -30,6 +30,7 @@ namespace CaExam.Controllers
         [HttpPost("/Name")]
         public async Task<IActionResult> UpdateDetailsName(string Name)
         {
+            Name.Trim();
             var validation = InputValidator.IsInputValid(eInputTypes.Name, Name);
             if (validation != null)
             {
@@ -53,6 +54,7 @@ namespace CaExam.Controllers
         [HttpPost("/Surname")]
         public async Task<IActionResult> UpdateDetailsSurname(string Surname)
         {
+            Surname.Trim();
             var validation = InputValidator.IsInputValid(eInputTypes.Surname, Surname);
             if (validation != null)
             {
@@ -88,7 +90,7 @@ namespace CaExam.Controllers
                 return actionResult;
             }
 
-            var result = await _userDetailsService.UpdateDetailsPropertyAsync(userId, nameof(UserDetails.Email), Email);
+            var result = await _userDetailsService.UpdateDetailsPropertyAsync(userId, nameof(UserDetails.Email), Email.Trim());
 
             if (!result.Success)
                 return StatusCode(500, result.Message);
@@ -111,7 +113,7 @@ namespace CaExam.Controllers
                 return actionResult;
             }
 
-            var result = await _userDetailsService.UpdateDetailsPropertyAsync(userId, nameof(UserDetails.PersonalIdNumber), PersonalIdNumber);
+            var result = await _userDetailsService.UpdateDetailsPropertyAsync(userId, nameof(UserDetails.PersonalIdNumber), PersonalIdNumber.Trim());
 
             if (!result.Success)
                 return StatusCode(500, result.Message);
@@ -134,7 +136,7 @@ namespace CaExam.Controllers
                 return actionResult;
             }
 
-            var result = await _userDetailsService.UpdateDetailsPropertyAsync(userId, nameof(UserDetails.PhoneNumber), PhoneNumber);
+            var result = await _userDetailsService.UpdateDetailsPropertyAsync(userId, nameof(UserDetails.PhoneNumber), PhoneNumber.Trim());
 
             if (!result.Success)
                 return StatusCode(500, result.Message);
