@@ -1,6 +1,9 @@
 ﻿using CaExam.Helpers;
+using CaExam.Helpers.CaExam.Helpers;
 using CaExam.Interfaces;
+using CaExam.Interfaces.RepositoryInterfaces;
 using CaExam.Services;
+using CaExam.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CaExam.Controllers
@@ -14,12 +17,15 @@ namespace CaExam.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly IUserAccountService _userAccountService;
 
+        private readonly IUserRepository _userRepository;
 
 
-        public AuthController(ILogger<AuthController>? logger, IUserAccountService userAccountService)
+
+        public AuthController(ILogger<AuthController>? logger, IUserAccountService userAccountService, IUserRepository userRepository)
         {
             _userAccountService = userAccountService;
             _logger = logger;
+            _userRepository = userRepository;
         }
 
         [HttpPost("Register")]
@@ -57,6 +63,30 @@ namespace CaExam.Controllers
 
                 return Ok($"Succes- use the following JWT for ruther authentication/authorization {successResponse.Data}");
             }
+        }
+
+        [HttpPost("DeleteUserById")]
+        public async Task<IActionResult> DeleteUserById(Guid userToDelete)
+        {
+            var actionResult = UserValidationHelper.GetUserGuid(User, out Guid userId);
+            if (actionResult != null)
+            {
+                return actionResult;
+            }
+
+            ApiResponse<eUserRole> roleResponse = await _userAccountService.GetUserRole(userId);
+
+            if (roleResponse.Success && roleResponse.Data != eUserRole.Admin)
+            {
+
+                return Unauthorized("Not sufficient right ");
+            }
+
+
+            await _userRepository.DeleteAsync(userToDelete);
+            await _userRepository.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

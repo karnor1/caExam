@@ -32,6 +32,7 @@ namespace CaExam.Helpers
                 role = eUserRole.Guest;
 
                 var userIdClaim = principal.FindFirst(ClaimTypes.Role)?.Value;
+
                 if (userIdClaim == null)
                 {
                     return new UnauthorizedObjectResult("INVALID TOKEN - User ID not found in token.");

@@ -21,6 +21,18 @@ namespace CaExam.Services
             _jwtService = jwtService;
         }
 
+        public async Task<ApiResponse<eUserRole>> GetUserRole(Guid userId)
+        {
+            var user = _userRepository.GetUserByIdAsync(userId);
+            if (user.Result != null)
+            {
+                return new ApiResponse<eUserRole>(true,"", user.Result.Role);
+            }
+
+            return new ApiResponse<eUserRole>(false, "", eUserRole.User); 
+        }
+
+
         public async Task<ApiResponse> RegisterAsync(string username, string password)
         {
             if (String.IsNullOrWhiteSpace(username))

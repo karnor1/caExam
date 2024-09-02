@@ -123,19 +123,6 @@ namespace CaExam.Controllers
             return data;
         }
 
-        [HttpPost("DeleteUserById")]
-        public async Task<IActionResult> DeleteUserById(Guid userToDelete)
-        {
-            var actionResult = UserValidationHelper.GetUserRole(User,out eUserRole role);
-            if (actionResult == null)
-            {
-                return null;
-            }
 
-            await _userRepository.DeleteAsync(userToDelete);
-            await _userRepository.SaveChangesAsync(); 
-
-            return Ok();
-        }
     }
 }

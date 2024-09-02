@@ -13,6 +13,8 @@ namespace CaExam.Interfaces.RepositoryInterfaces
 
         Task<UserModel> GetFullUserByIDAsync(Guid Id);
 
+        
+
 
 
     }
